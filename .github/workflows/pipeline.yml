@@ -7,7 +7,6 @@ on:
       - main
 
 env:
-  AZURE_WEBAPP_NAME: fintrac
   AZURE_WEBAPP_PACKAGE_PATH: "./Backend/publish"
   DOTNET_VERSION: "10.x"
   SOLUTION_PATH: "FinTrac.sln"
@@ -60,6 +59,6 @@ jobs:
       - name: Deploy
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
