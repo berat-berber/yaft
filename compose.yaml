@@ -8,6 +8,11 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
       POSTGRES_DB: fintrac
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d fintrac"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
@@ -22,7 +27,8 @@ services:
       JWTIssuer: FinTrac
       JWTAudience: FinTrac
     depends_on:
-      - database
+      database:
+        condition: service_healthy
 
   frontend:
     build:
