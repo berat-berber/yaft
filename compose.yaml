@@ -26,6 +26,7 @@ services:
       JWTKey: 1e2d5686470c4a9db9fa9bb82a8a33672dd7c1de64bb9d836a1fa9a54d095c0a
       JWTIssuer: FinTrac
       JWTAudience: FinTrac
+      FrontendAddress: http://localhost:5173
     depends_on:
       database:
         condition: service_healthy
@@ -37,6 +38,8 @@ services:
     container_name: fintrac-frontend
     ports:
       - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:5134
     depends_on:
       - backend
 
