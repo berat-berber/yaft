@@ -9,7 +9,7 @@ on:
 env:
   AZURE_WEBAPP_PACKAGE_PATH: "./Backend/publish"
   DOTNET_VERSION: "10.x"
-  SOLUTION_PATH: "Backend/Backend.slnx"
+  SOLUTION_PATH: "FinTrac.slnx"
   API_PROJECT_PATH: "Backend/Backend.csproj"
   PUBLISH_DIR: "./Backend/publish"
 
@@ -27,16 +27,16 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore
-        run: dotnet restore ${{ env.API_PROJECT_PATH }}
+        run: dotnet restore ${{ env.SOLUTION_PATH }}
 
       - name: Build
-        run: dotnet build ${{ env.API_PROJECT_PATH }} --configuration Release --no-restore
+        run: dotnet build ${{ env.SOLUTION_PATH }} --configuration Release --no-restore
 
       - name: Test
         run: dotnet test ${{ env.SOLUTION_PATH }} --configuration Release --no-restore --no-build
 
       - name: Publish
-        run: dotnet publish ${{ env.API_PROJECT_PATH }} --configuration Release --no-restore --no-build -o ./Backend/publish
+        run: dotnet publish ${{ env.SOLUTION_PATH }} --configuration Release --no-restore --no-build -o ./Backend/publish
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
