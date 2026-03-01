@@ -7,6 +7,8 @@ A privacy-focused multi-bank transaction aggregator that allows users to upload,
 
 **[Check API Documentation](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/berat-berber/FinTrac/refs/heads/main/v1.json)**
 
+**[See Load Test Results](https://github.com/berat-berber/FinTrac/blob/01a471f9866131b7353407d1cc73e25f945ce713/fintrac-load-test-1.pdf?raw=true)**
+
 ## Deployment Stack
 - **Backend** -> **Azure**
 - **Database** -> **Supabase**
