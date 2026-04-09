@@ -17,7 +17,16 @@ import { Field, FieldLabel, FieldGroup, FieldDescription } from '@/components/ui
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
 import { apiClient } from '@/lib/api-client'
 import { toast } from 'sonner'
-import type { Account } from '@/lib/types'
+import { Input } from '@/components/ui/input'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import type { Account, ParsedTransaction } from '@/lib/types' // add ParsedTransaction
 
 
 
@@ -29,12 +38,32 @@ interface FileUpload {
   error?: string
 }
 
+function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'decimal',
+    minimumFractionDigits: 2,
+  }).format(amount)
+}
+
+function formatDate(dateTime: string): string {
+  return new Date(dateTime).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
+}
+
+
 export default function UploadPage() {
   const [selectedAccountId, setSelectedAccountId] = useState<string>('')
   const [uploads, setUploads] = useState<FileUpload[]>([])
   const [isDragging, setIsDragging] = useState(false)
   // Add state
   const [selectedBankName, setSelectedBankName] = useState<string>('')
+
+  const [selectedAccountName, setSelectedAccountName] = useState<string>('')
+  const [parsedTransactions, setParsedTransactions] = useState<ParsedTransaction[] | null>(null)
+  const [isSaving, setIsSaving] = useState(false)
 
   const { data: accounts = [], isLoading: accountsLoading } = useSWR<Account[]>(
     'accounts',
@@ -91,11 +120,17 @@ export default function UploadPage() {
       if (!selectedAccount) {
         throw new Error('Selected account was not found')
       }
-      await apiClient.uploadTransactions(selectedAccount.name, upload.file, selectedBankName)
+      const transactions = await apiClient.uploadTransactions(
+        selectedAccount.name,
+        upload.file,
+        selectedBankName
+      )
+      setSelectedAccountName(selectedAccount.name)
+      setParsedTransactions(transactions)
       setUploads((prev) =>
         prev.map((u, i) => (i === index ? { ...u, status: 'success' } : u))
       )
-      toast.success(`Successfully uploaded ${upload.file.name}`)
+      toast.success(`Parsed ${transactions.length} transactions — review before saving`)
     } catch (error) {
       setUploads((prev) =>
         prev.map((u, i) =>
@@ -106,6 +141,27 @@ export default function UploadPage() {
       )
       toast.error(`Failed to upload ${upload.file.name}`)
     }
+  }
+
+  const handleSave = async () => {
+    if (!parsedTransactions || !selectedAccountName) return
+    setIsSaving(true)
+    try {
+      await apiClient.createTransactions(parsedTransactions, selectedAccountName)
+      toast.success('Transactions saved successfully')
+      setParsedTransactions(null)
+      setUploads([])
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to save transactions')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const updateDescription = (tempId: string, value: string) => {
+    setParsedTransactions((prev) =>
+      prev ? prev.map((t) => (t.tempId === tempId ? { ...t, desc: value } : t)) : prev
+    )
   }
 
   const removeFile = (index: number) => {
@@ -124,6 +180,8 @@ export default function UploadPage() {
         title="Upload Transactions"
         description="Import your bank statements"
       />
+      {!parsedTransactions && (
+        <>
       <div className="flex-1 p-6">
         <div className="mx-auto max-w-2xl space-y-6">
           {/* Account Selection */}
@@ -172,8 +230,8 @@ export default function UploadPage() {
                       <SelectValue placeholder="Select a bank" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="bank_a">Is Bank</SelectItem>
-                      <SelectItem value="bank_b">Ziraat Bank</SelectItem>
+                      <SelectItem value="Is Bank">Is Bank</SelectItem>
+                      <SelectItem value="Ziraat Bank">Ziraat Bank</SelectItem>
                     </SelectContent>
                   </Select>
                   <FieldDescription>
@@ -214,7 +272,7 @@ export default function UploadPage() {
                 <label>
                   <input
                     type="file"
-                    accept=".csv,.xlsx,.xls"
+                    accept=".xlsx,.xls"
                     multiple
                     onChange={(e) => handleFiles(e.target.files)}
                     className="hidden"
@@ -224,7 +282,7 @@ export default function UploadPage() {
                   </Button>
                 </label>
               </div>
-
+                
               {/* File List */}
               {uploads.length > 0 && (
                 <div className="space-y-2">
@@ -298,8 +356,83 @@ export default function UploadPage() {
               )}
             </CardContent>
           </Card>
+          
         </div>
       </div>
+      </>
+)}{parsedTransactions && (
+  <Card>
+    <CardHeader>
+      <div className="flex items-center justify-between">
+        <div>
+          <CardTitle>Review Transactions</CardTitle>
+          <CardDescription>
+            Edit descriptions if needed, then save to your account
+          </CardDescription>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => {
+              setParsedTransactions(null)
+              setUploads([])
+            }}
+          >
+            Cancel
+          </Button>
+          <Button onClick={handleSave} disabled={isSaving}>
+            {isSaving ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              `Save ${parsedTransactions.length} Transactions`
+            )}
+          </Button>
+        </div>
+      </div>
+    </CardHeader>
+    <CardContent>
+      <div className="rounded-lg border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Date</TableHead>
+              <TableHead>Description</TableHead>
+              <TableHead className="text-right">Amount</TableHead>
+              <TableHead className="text-right">Balance</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {parsedTransactions.map((t) => (
+              <TableRow key={t.tempId}>
+                <TableCell className="text-muted-foreground whitespace-nowrap">
+                  {formatDate(t.dateTime)}
+                </TableCell>
+                <TableCell>
+                  <Input
+                    value={t.desc}
+                    onChange={(e) => updateDescription(t.tempId, e.target.value)}
+                    className="h-8 min-w-48"
+                  />
+                </TableCell>
+                <TableCell className={`text-right font-medium whitespace-nowrap ${t.amount < 0 ? 'text-destructive' : 'text-primary'}`}>
+                  {t.amount < 0 ? '-' : '+'}
+                  {formatCurrency(Math.abs(t.amount))}
+                </TableCell>
+                <TableCell className="text-right text-muted-foreground whitespace-nowrap">
+                  {formatCurrency(t.balance)}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </CardContent>
+  </Card>
+)}
     </div>
+  
   )
 }

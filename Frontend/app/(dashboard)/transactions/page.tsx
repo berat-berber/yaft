@@ -19,6 +19,8 @@ export default function TransactionsPage() {
 
   const isLoading = transactionsLoading || accountsLoading
 
+  
+
   return (
     <div className="flex flex-col">
       <DashboardHeader

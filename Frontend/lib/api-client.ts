@@ -7,6 +7,7 @@ import type {
   TransactionCreate,
   LoginRequest,
   RegisterRequest,
+  ParsedTransaction
 } from './types'
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '')
@@ -109,6 +110,17 @@ class ApiClient {
     }
   }
 
+  private normalizeParsedTransaction(t: any): ParsedTransaction {
+    return {
+      tempId: String(t.tempId ?? t.TempId ?? ''),
+      amount: Number(t.amount ?? t.Amount ?? 0),
+      balance: Number(t.balance ?? t.Balance ?? 0),
+      dateTime: String(t.dateTime ?? t.DateTime ?? ''),
+      desc: String(t.desc ?? t.Desc ?? t.description ?? t.Description ?? ''),
+      order: Number(t.order ?? t.Order ?? 0),
+    }
+  }
+
   // Auth endpoints
   async login(credentials: LoginRequest): Promise<string> {
     return this.request<string>('/api/Auth/login', {
@@ -199,7 +211,7 @@ class ApiClient {
   }
 
   // File upload endpoint
-  async uploadTransactions(accountName: string, file: File, bankName = ''): Promise<void> {
+  async uploadTransactions(accountName: string, file: File, bankName = ''): Promise<ParsedTransaction[]> {
     const token = this.getToken()
     const formData = new FormData()
     formData.append('File', file)
@@ -219,7 +231,19 @@ class ApiClient {
       const errorText = await response.text()
       throw new Error(errorText || `Upload failed: ${response.status}`)
     }
+
+    const data = await response.json()
+    return (data ?? []).map((t: any) => this.normalizeParsedTransaction(t))
+
   }
+
+  async createTransactions(parses: ParsedTransaction[], accountName: string): Promise<void> {
+    await this.request<void>('/api/Transactions', {
+      method: 'POST',
+      body: JSON.stringify({ parses, accountName }),
+    })
+  }
+
 }
 
 export const apiClient = new ApiClient()

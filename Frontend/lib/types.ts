@@ -76,3 +76,12 @@ export interface ApiError {
   message: string
   errors?: Record<string, string[]>
 }
+
+export interface ParsedTransaction {
+  tempId: string
+  amount: number
+  balance: number
+  dateTime: string
+  desc: string
+  order: number
+}
