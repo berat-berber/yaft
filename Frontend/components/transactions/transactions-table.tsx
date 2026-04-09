@@ -52,7 +52,7 @@ export function TransactionsTable({ transactions, accounts, isLoading }: Transac
     return accounts.reduce((acc, account) => {
       acc[account.id] = account
       return acc
-    }, {} as Record<number, Account>)
+    }, {} as Record<string, Account>)
   }, [accounts])
 
   const filteredAndSortedTransactions = useMemo(() => {

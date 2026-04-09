@@ -17,7 +17,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null)
 
 // Parse JWT to get user info
-function parseJwt(token: string): { userId: number; email: string; name: string } | null {
+function parseJwt(token: string): { userId: string; email: string; name: string } | null {
   try {
     const base64Url = token.split('.')[1]
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
