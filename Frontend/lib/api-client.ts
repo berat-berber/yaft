@@ -174,7 +174,7 @@ class ApiClient {
     return this.normalizeAccount(account)
   }
 
-  async updateAccount(id: number, data: AccountUpdate): Promise<void> {
+  async updateAccount(id: string, data: AccountUpdate): Promise<void> {
     await this.request<void>(`/api/Accounts/${id}`, {
       method: 'PUT',
       body: JSON.stringify({

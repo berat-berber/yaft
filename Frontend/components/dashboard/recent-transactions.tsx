@@ -26,7 +26,7 @@ export function RecentTransactions({ transactions, accounts, isLoading }: Recent
   const accountMap = accounts.reduce((acc, account) => {
     acc[account.id] = account
     return acc
-  }, {} as Record<number, Account>)
+  }, {} as Record<string, Account>)
 
   // Sort by date descending and take first 10
   const recentTransactions = [...transactions]
