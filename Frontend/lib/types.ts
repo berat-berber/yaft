@@ -1,7 +1,7 @@
 // API Types based on YAFT OpenAPI spec
 
 export interface User {
-  id: number
+  id: string
   name: string
   email: string
 }
@@ -19,8 +19,8 @@ export interface UserUpdate {
 }
 
 export interface Account {
-  id: number
-  userId: number
+  id: string
+  userId: string
   name: string
   balance: number
   currency: string
@@ -40,8 +40,8 @@ export interface AccountUpdate {
 }
 
 export interface Transaction {
-  id: number
-  accountId: number
+  id: string
+  accountId: string
   date: string
   description: string
   amount: number
@@ -49,7 +49,7 @@ export interface Transaction {
 }
 
 export interface TransactionCreate {
-  accountId: number
+  accountId: string
   date: string
   description: string
   amount: number

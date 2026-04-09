@@ -82,26 +82,26 @@ class ApiClient {
   }
 
   private normalizeAccount(account: any): Account {
-    return {
-      id: Number(account.id ?? account.Id ?? 0),
-      userId: Number(account.userId ?? account.UserId ?? 0),
-      name: String(account.name ?? account.Name ?? ''),
-      balance: Number(account.balance ?? account.Balance ?? 0),
-      currency: String(account.currency ?? account.Currency ?? 'USD'),
-      category: String(
-        account.category ??
-          account.accountCategory ??
-          account.Category ??
-          account.AccountCategory ??
-          'Other'
-      ),
-    }
+  return {
+    id: String(account.accountId ?? account.id ?? account.Id ?? ''),
+    userId: String(account.userId ?? account.UserId ?? ''),
+    name: String(account.accountName ?? account.name ?? account.Name ?? ''),
+    balance: Number(account.balance ?? account.Balance ?? 0),
+    currency: String(account.currency ?? account.Currency ?? 'USD'),
+    category: String(
+      account.category ??
+        account.accountCategory ??
+        account.Category ??
+        account.AccountCategory ??
+        'Other'
+    ),
   }
+}
 
   private normalizeTransaction(transaction: any): Transaction {
     return {
-      id: Number(transaction.id ?? transaction.Id ?? 0),
-      accountId: Number(transaction.accountId ?? transaction.AccountId ?? 0),
+      id: String(transaction.id ?? transaction.Id ?? ''),
+      accountId: String(transaction.accountId ?? transaction.AccountId ?? 0),
       date: String(transaction.date ?? transaction.Date ?? transaction.dateTime ?? transaction.DateTime ?? ''),
       description: String(transaction.description ?? transaction.desc ?? transaction.Description ?? transaction.Desc ?? ''),
       amount: Number(transaction.amount ?? transaction.Amount ?? 0),
@@ -173,7 +173,7 @@ class ApiClient {
     })
   }
 
-  async deleteAccount(id: number): Promise<void> {
+  async deleteAccount(id: string): Promise<void> {
     await this.request<void>(`/api/Accounts/${id}`, { method: 'DELETE' })
   }
 
