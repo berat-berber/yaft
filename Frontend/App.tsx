@@ -11,6 +11,7 @@ import TransactionsPage from '@/app/(dashboard)/transactions/page'
 import UploadPage from '@/app/(dashboard)/upload/page'
 import LoginPage from '@/app/(auth)/login/page'
 import RegisterPage from '@/app/(auth)/register/page'
+import WelcomePage from '@/app/(landing)/page'
 
 function AuthLayout() {
   return (
@@ -54,7 +55,7 @@ function AuthOnlyLayout() {
   const { isAuthenticated, isLoading } = useAuth()
 
   if (isLoading) return null
-  if (isAuthenticated) return <Navigate to="/" replace />
+  if (isAuthenticated) return <Navigate to="/dashboard" replace />
   return <Outlet />
 }
 
@@ -63,6 +64,8 @@ export function App() {
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
       <AuthProvider>
         <Routes>
+          <Route path="/" element={<WelcomePage />} />
+          
           <Route element={<AuthOnlyLayout />}>
             <Route element={<AuthLayout />}>
               <Route path="/login" element={<LoginPage />} />
@@ -71,7 +74,7 @@ export function App() {
           </Route>
 
           <Route element={<ProtectedLayout />}>
-            <Route path="/" element={<DashboardPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/accounts" element={<AccountsPage />} />
             <Route path="/transactions" element={<TransactionsPage />} />
             <Route path="/upload" element={<UploadPage />} />
