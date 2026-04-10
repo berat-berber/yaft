@@ -28,6 +28,10 @@ namespace MyApp.Namespace
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
+            var accountCheck = await _context.Accounts.FirstOrDefaultAsync(a => a.UserId == userId && a.Name == request.Name);
+
+            if(accountCheck is not null) return BadRequest("Account Already Exists");
+
             var accountCategory = await _context.AccountCategories.FirstOrDefaultAsync(a => a.Name == request.AccountCategory);
 
             if(accountCategory is null) return BadRequest("Invalid Category");
