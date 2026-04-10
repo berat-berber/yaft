@@ -22,6 +22,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
+  SidebarTrigger,
 } from '@/components/ui/sidebar'
 import {
   DropdownMenu,
@@ -70,13 +71,14 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader className="px-4 py-5">
+      <SidebarHeader className="px-4 py-5 flex flex-row items-center justify-between">
         <Link to="/dashboard" className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Wallet className="h-4 w-4" />
           </div>
           <span className="text-lg font-semibold">YAFT</span>
         </Link>
+        <SidebarTrigger />
       </SidebarHeader>
 
       <SidebarSeparator />

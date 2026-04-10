@@ -2,7 +2,9 @@ import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { AppSidebar } from '@/components/app-sidebar'
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import { SidebarInset, SidebarProvider, useSidebar } from '@/components/ui/sidebar'
+import { ChevronRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAuth, AuthProvider } from '@/lib/auth-context'
 import DashboardPage from '@/app/(dashboard)/page'
@@ -20,6 +22,25 @@ function AuthLayout() {
         <Outlet />
       </div>
     </div>
+  )
+}
+
+function FloatingSidebarTrigger() {
+  const { state, toggleSidebar } = useSidebar()
+  
+  if (state !== 'collapsed') return null
+
+  return (
+    <Button
+      variant="outline"
+      size="icon"
+      onClick={toggleSidebar}
+      className="fixed bottom-4 left-0 z-50 rounded-l-none rounded-r-md border-l-0 shadow-md h-8 w-8"
+      title="Open Sidebar"
+    >
+      <ChevronRight className="h-4 w-4" />
+      <span className="sr-only">Open Sidebar</span>
+    </Button>
   )
 }
 
@@ -44,6 +65,7 @@ function ProtectedLayout() {
   return (
     <SidebarProvider>
       <AppSidebar />
+      <FloatingSidebarTrigger />
       <SidebarInset>
         <Outlet />
       </SidebarInset>
