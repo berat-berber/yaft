@@ -47,9 +47,9 @@ export default function WelcomePage() {
           </p>
           <div className="flex items-center justify-center gap-4">
             {!isAuthenticated && (
-               <Button size="lg" className="h-12 px-8 text-lg" asChild>
-                 <Link to="/register">Get Started</Link>
-               </Button>
+              <Button size="lg" className="h-12 px-8 text-lg" asChild>
+                <Link to="/register">Get Started</Link>
+              </Button>
             )}
             <Button size="lg" variant="outline" className="h-12 px-8 text-lg" asChild>
               <a href="https://github.com/berat-berber/yaft" target="_blank" rel="noreferrer">
@@ -76,36 +76,77 @@ export default function WelcomePage() {
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-12">Core Features</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <FeatureCard 
+              <FeatureCard
                 icon={<Wallet className="h-6 w-6" />}
                 title="Multi-Bank Support"
                 description="Upload and parse Excel files from Ziraat Bank and Is Bank (more banks coming soon)."
               />
-              <FeatureCard 
+              <FeatureCard
                 icon={<LayoutDashboard className="h-6 w-6" />}
                 title="Unified Dashboard"
                 description="View transactions from all your accounts in one single, organized place."
               />
-              <FeatureCard 
+              <FeatureCard
                 icon={<Shield className="h-6 w-6" />}
                 title="Privacy-First"
                 description="Your data never leaves your control - no bank credentials required."
               />
-              <FeatureCard 
+              <FeatureCard
                 icon={<Edit3 className="h-6 w-6" />}
                 title="Transaction Editing"
                 description="Modify transaction descriptions to protect sensitive information."
               />
-              <FeatureCard 
+              <FeatureCard
                 icon={<CopyX className="h-6 w-6" />}
                 title="Duplicate Detection"
                 description="Automatically prevents duplicate transactions when uploading the same file multiple times."
               />
-              <FeatureCard 
+              <FeatureCard
                 icon={<Lock className="h-6 w-6" />}
                 title="Secure Authentication"
                 description="JWT-based authentication with role-based authorization for maximum security."
               />
+            </div>
+          </div>
+        </section>
+
+        {/* How to Use Section */}
+        <section className="w-full bg-muted/50 py-20 px-4">
+          <div className="max-w-5xl mx-auto text-center">
+            <h2 className="text-3xl font-bold mb-16">How to Use YAFT</h2>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16 text-left">
+              <div className="relative p-6 rounded-2xl bg-background border shadow-sm">
+                <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg shadow-sm">1</div>
+                <h3 className="text-xl font-semibold mb-2 mt-2">Export Data</h3>
+                <p className="text-muted-foreground">Download your transaction history as an Excel file from Ziraat Bank or Is Bank.</p>
+              </div>
+              <div className="relative p-6 rounded-2xl bg-background border shadow-sm">
+                <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg shadow-sm">2</div>
+                <h3 className="text-xl font-semibold mb-2 mt-2">Create Account</h3>
+                <p className="text-muted-foreground">Add a bank account in YAFT that matches your real-world bank account details.</p>
+              </div>
+              <div className="relative p-6 rounded-2xl bg-background border shadow-sm">
+                <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg shadow-sm">3</div>
+                <h3 className="text-xl font-semibold mb-2 mt-2">Upload to YAFT</h3>
+                <p className="text-muted-foreground">Securely upload your Excel files. Your transactions are safely stored in your account.</p>
+              </div>
+              <div className="relative p-6 rounded-2xl bg-background border shadow-sm">
+                <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg shadow-sm">4</div>
+                <h3 className="text-xl font-semibold mb-2 mt-2">Take Control</h3>
+                <p className="text-muted-foreground">Analyze your balances, view across multiple accounts, and manage your financial data.</p>
+              </div>
+            </div>
+
+            <div className="rounded-2xl overflow-hidden border shadow-xl bg-black/5 aspect-video flex items-center justify-center relative mx-auto max-w-4xl">
+              <video
+                className="w-full h-full object-cover"
+                controls
+                preload="metadata"
+                src={import.meta.env.VITE_TUTORIAL_VIDEO_URL}
+              >
+                Your browser does not support the video tag.
+              </video>
             </div>
           </div>
         </section>
