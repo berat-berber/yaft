@@ -1,8 +1,12 @@
 # YAFT
 
-Yet Another Finance Tracker is a privacy-focused multi-bank transaction aggregator that allows users to upload, analyze, and manage financial data from multiple Turkish banks in one unified interface.
+Yet Another Finance Tracker is a privacy-focused multi-bank transaction aggregator that allows users to upload, analyze and manage financial data from multiple Turkish banks in one unified interface.
 
-## Live Demo
+## Preview
+
+![Preview](https://yaftblobstorage.blob.core.windows.net/media/images/github-readme-preview.png)
+
+## Live
 **[Try YAFT Here](https://yaftapp.vercel.app)**
 
 **[Check API Documentation](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/berat-berber/yaft/refs/heads/main/v1.json)**
@@ -118,8 +122,7 @@ cd yaft
 # Start all services
 docker compose up -d --build
 
-# Access the application
-# Frontend: http://localhost:5173
+# Access the application -> http://localhost:5173
 ```
 
 To stop the application:
@@ -127,10 +130,6 @@ To stop the application:
 docker compose down
 ```
 
-## License
-
-MIT
-
-## Author
+## Made By
 Berat Berber
 - LinkedIn: [www.linkedin.com/in/berat-berber]
