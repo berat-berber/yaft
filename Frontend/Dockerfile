@@ -1,18 +1,18 @@
-FROM node:22.20.0-alpine
+FROM node:22-alpine
 
 WORKDIR /usr/src/app
 
-# Copy everything first
-COPY . .
+# Update npm to fix potential "Exit handler never called!" issues on alpine
+RUN npm install -g npm@latest
 
-# Remove any existing node_modules and cache
-RUN rm -rf node_modules .vite
+# Copy package files first for better caching
+COPY package.json package-lock.json ./
 
 # Install dependencies
 RUN npm install
 
-# Make everything writable
-RUN chmod -R 777 /usr/src/app
+# Copy remaining source code
+COPY . .
 
 # Expose Vite dev server port
 EXPOSE 5173
