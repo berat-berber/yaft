@@ -7,7 +7,7 @@ Yet Another Finance Tracker is a privacy-focused multi-bank transaction aggregat
 ![Preview](https://yaftblobstorage.blob.core.windows.net/media/images/github-readme-preview.png)
 
 ## Live
-**[Try YAFT Here](https://yaftapp.vercel.app)**
+**[Try YAFT Here](https://yaftapp.netlify.app)**
 
 **[Check API Documentation](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/berat-berber/yaft/refs/heads/main/v1.json)**
 
